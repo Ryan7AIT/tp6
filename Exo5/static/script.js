@@ -159,9 +159,14 @@ function doNewData(){
 }
 
 function deleteRow(){
-	if(lignes=0){
-		alert("Tableau d�j� vide !");
-	}else{		
+	console.log(lignes);
+
+
+	if(lignes==0){
+		alert("Tableau deja vide !");
+	}else{	
+		console.log(lignes);
+
 		table = document.getElementsByTagName("table")[0];
 		chkbox_list = table.querySelectorAll(".col_chkbox input");
 		isOneChecked=false;
@@ -170,7 +175,7 @@ function deleteRow(){
 				isOneChecked = true;
 		}
 		if(isOneChecked!=true)
-			alert("S�lectionnez au moins une ligne !");
+			alert("Selectionnez au moins une ligne !");
 		else{
 				if (confirm('Voulez-vous vraiment supprimer les lignes ?')) {
 				table = document.getElementsByTagName("table")[0];
@@ -178,8 +183,12 @@ function deleteRow(){
 				let i=0;
 				
 				while(i<rows.length){
+					console.log(lignes);
+
+
 					if(rows[i].childNodes[4].firstChild.checked){
-						console.log('hereeeeeeee');
+						console.log(lignes);
+
 						total_points = total_points - parseInt(rows[i].childNodes[3].innerText);
 
 						id = parseInt(rows[i].firstChild.innerText);
@@ -193,7 +202,7 @@ function deleteRow(){
 					}	
 					i++;
 				}
-				alert("Ligne supprim�e avec succ�s !");				
+				alert("Ligne supprimee avec succes !");				
 				update_summary();				
 			}
 		}
@@ -230,13 +239,11 @@ function getPersons() {
 function doAfficherPersons() {
 
 	const table = document.getElementsByTagName("table")[0];
-
+	
 	rows = table.getElementsByClassName("row");
 
-	// console.log(rows);
-
 	for (row of rows) {
-		console.log(row);
+		
 		row.remove();
 	}
 
