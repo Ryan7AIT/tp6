@@ -1,49 +1,31 @@
-
 lignes = 0;
+total_points = 0;
 
-
-total_points=0;
-
-persons = [
-	{
-		nom:"nom-1",
-		prenom:"prenom-1",
-		points:5
-	},
-	{
-		nom:"nom-2",
-		prenom:"prenom-2",
-		points:10
-	},
-	{
-		nom:"nom-3",
-		prenom:"prenom-3",
-		points:15
-	}			
-]
+// persons = [
+// 	{
+// 		nom:"nom-1",
+// 		prenom:"prenom-1",
+// 		points:5
+// 	},
+// 	{
+// 		nom:"nom-2",
+// 		prenom:"prenom-2",
+// 		points:10
+// 	},
+// 	{
+// 		nom:"nom-3",
+// 		prenom:"prenom-3",
+// 		points:15
+// 	}			
+// ]
 
 
 // Appel de init()
 init();
 
 function init(){	
-	// Utilisez la boucle for..of vue en cours 
-	// pour parcourir les objets du tableau persons
-	// et appeller doInsert sur chaque objet
-	
-	// A completer
-	/*
-		for(... of ...){
-			doInsert(...);
-		}
-	*/
 
 	getPersons();
-
-	
-	// for(person of persons){
-	// 	doInsert(person.nom, person.prenom, person.points);
-	// }
 }
 
 function doInsertRowTable(num, nom, prenom, points){
@@ -88,26 +70,22 @@ function doInsertRowTable(num, nom, prenom, points){
 	col2.setAttribute("class", "col_text");	
 	col3.setAttribute("class", "col_text");
 	col4.setAttribute("class", "col_number");	
-	col5.setAttribute("class", "col_chkbox");
-	col5.setAttribute("class", "col_edit");	
+	col5.setAttribute("class", "col_chkbox deletecheck");
+	col6.setAttribute("class", "col_edit");	
 
 	
-	//  A compl�ter: RAJOUTER LES COLONNES A LA LIGNE row avec la m�thode append()
 	row.append(col1);
 	row.append(col2);
 	row.append(col3);
 	row.append(col4);
 	row.append(col5);	
 	row.append(col6);	
-
 	
-	//  A compl�ter: RAJOUTER LA LIGNE row AU TABLEAU table
 	table.append(row);
 }
 
 function doInsert(id,nom, prenom, points){	
 	lignes++;
-	//num = lignes;
 	total_points = total_points + points;			
 	doInsertRowTable(id, nom, prenom, points);		
 	update_summary();
@@ -119,22 +97,6 @@ function consoleTableau(){
 }
 
 function update_summary(){	
-	// R�cup�rer l'�l�ment id = p1
-	// element_lignes = ...(A COMPLETER)
-	
-	
-	// R�cup�rer l'�l�ment id = p3
-	// element_points = ...(A COMPLETER)
-	
-	
-	// Avec innerText, modifiez le contenu de element_lignes
-	// pour afficher le nombre de lignes (variables lignes)
-	// element_lignes...(A COMPLETER)
-	
-	
-	// Avec innerText, modifiez le contenu de element_points
-	// pour afficher le total des points (variables total_points)
-	// element_points...(A COMPLETER)
 
 	element_lignes = document.getElementById("p1");
 	element_points = document.getElementById("p3");
@@ -149,7 +111,6 @@ function doNewData(){
 	elt_prenom = document.getElementById("form_prenom");
 	elt_points = document.getElementById("form_points");
 
-	console.log(elt_prenom);
 	
 	nom = elt_nom.value;
 	prenom = elt_prenom.value;
@@ -215,8 +176,10 @@ function deleteRow(){
 				table = document.getElementsByTagName("table")[0];
 				rows = table.getElementsByClassName("row");
 				let i=0;
+				
 				while(i<rows.length){
-					if(rows[i].lastChild.firstChild.checked){
+					if(rows[i].childNodes[4].firstChild.checked){
+						console.log('hereeeeeeee');
 						total_points = total_points - parseInt(rows[i].childNodes[3].innerText);
 
 						id = parseInt(rows[i].firstChild.innerText);
@@ -249,6 +212,7 @@ function deletePerson(id) {
 
 function actualiser() {
 	getPersons();
+
 }
 
 function getPersons() {
@@ -265,16 +229,21 @@ function getPersons() {
 
 function doAfficherPersons() {
 
-	// const table = document.getElementsByTagName("table")[0];
+	const table = document.getElementsByTagName("table")[0];
 
-	// rows = table.getElementsByClassName("row");
+	rows = table.getElementsByClassName("row");
 
-	// for (row of rows) {
-	// 	row.remove();
-	// }
+	// console.log(rows);
 
-	// lignes = 0;
-	// total_points = 0;
+	for (row of rows) {
+		console.log(row);
+		row.remove();
+	}
+
+	lignes = 0;
+	total_points = 0;
+
+
 
 	
 	if(httpRequest.readyState === XMLHttpRequest.DONE) {
@@ -285,11 +254,14 @@ function doAfficherPersons() {
 
             persons = JSON.parse(reponse)
 
-            for(person of persons) {
-                doInsert(person.id, person.nom, person.prenom, person.points)
-            }
+			//  setTimeout(() => {
+				for(person of persons) {
+					doInsert(person.id, person.nom, person.prenom, person.points)
+				}	
+			//  }, 1000);
 
-            document.body.append(table);
+
+
         }else {
             alert('Petit soucis')
 		}
@@ -328,5 +300,55 @@ function editRow(btnEdit) {
 function annulerEdit() {
 	document.getElementById("form_edit_container").hidden = true;
 	document.getElementById("form_container").hidden = false;
+
+}
+
+function doEditData() {
+	elt_id = document.getElementById("form_edit_id");
+	elt_nom = document.getElementById("form_edit_nom");
+	elt_prenom = document.getElementById("form_edit_prenom");
+	elt_points = document.getElementById("form_edit_points");
+
+	console.log(elt_id,elt_nom,elt_prenom,elt_points);
+	id = elt_id.value;
+	nom = elt_nom.value;
+	prenom = elt_prenom.value;
+	points = elt_points.value;
+
+	if(nom==" " || prenom=="" || Number.isNaN(points))
+		alert("formulaire incompet !")
+	else {
+
+		httpRequest = new XMLHttpRequest();
+
+		httpRequest.open('PUT', '/api/persons/'+id);
+
+		httpRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+
+	
+		httpRequest.onreadystatechange  = actualiser;
+
+		var data = "valNom="+nom + "&valPrenom=" +prenom + "&valPoints="+points;
+
+	
+		httpRequest.send(data);
+		
+
+
+		
+
+		elt_nom.value = "";
+		elt_prenom.value = "";
+		elt_points.value = "";
+
+		
+		document.getElementById("form_edit_container").hidden = true;
+		document.getElementById("form_container").hidden = false;
+
+
+	}
+
+
 
 }
